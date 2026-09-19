@@ -96,7 +96,12 @@ section.blk.tight{padding:72px 0}
 .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--linha) 1px,transparent 1px),linear-gradient(90deg,var(--linha) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(720px 520px at 72% 22%,#000,transparent 76%);opacity:.5}
 .hero .container{position:relative}
 .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:56px;align-items:center}
-.hero h1{font-size:clamp(2.4rem,5.4vw,4.15rem);margin:22px 0 22px}
+/* H1 em caixa alta (pedido do Patrick, 19/09/2026). Em maiusculas o
+   texto ocupa mais largura e o olho perde a silhueta das palavras,
+   entao: corpo um pouco menor, entrelinha mais apertada (maiuscula
+   nao tem descendente, o vao entre linhas parece maior do que e) e
+   um respiro de letra para nao empastar. */
+.hero h1{font-size:clamp(2rem,3.9vw,2.95rem);margin:22px 0 22px;text-transform:uppercase;line-height:1.05;letter-spacing:-.005em;text-wrap:balance}
 .hero h1 .g{color:var(--lima);text-shadow:0 0 40px var(--lima-glow)}
 .hero p.lead{font-size:1.16rem;color:var(--cinza);max-width:560px;margin-bottom:14px}
 .hero p.lead b{color:var(--branco);font-weight:600}
@@ -370,7 +375,7 @@ footer{background:var(--preto-2);border-top:1px solid var(--linha);padding:56px 
 }
 @media(max-width:640px){
   .container{width:min(100% - 28px,var(--max))}
-  .hero h1{font-size:clamp(2.05rem,8.5vw,2.7rem)}
+  .hero h1{font-size:clamp(1.62rem,6.6vw,2.05rem)}
   .btn{width:100%;padding:17px 22px;font-size:.95rem}
   .btn-lg{font-size:1rem;padding:18px 24px}
   .cta-row{flex-direction:column}
@@ -527,7 +532,7 @@ footer{background:var(--preto-2);border-top:1px solid var(--linha);padding:56px 
 
   /* --- titulos: caber sem quebrar palavra no meio --- */
   .head h2,.etapa h2{font-size:clamp(1.55rem,6.4vw,2rem)}
-  .hero h1{font-size:clamp(1.95rem,7.6vw,2.4rem)}
+  .hero h1{font-size:clamp(1.62rem,6.4vw,2.05rem);letter-spacing:-.01em}
   .final h2{font-size:clamp(1.7rem,6.8vw,2.2rem)}
   .virada h2{font-size:clamp(1.45rem,5.8vw,1.9rem)}
   h1,h2,h3,h4{text-wrap:balance;hyphens:none}
