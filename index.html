@@ -477,6 +477,107 @@ footer{background:var(--preto-2);border-top:1px solid var(--linha);padding:56px 
   .linha{grid-template-columns:1fr}
   .mod-bloco{padding:24px 20px}
 }
+
+/* =========================================================
+   MOBILE — passada de acabamento (19/09/2026)
+   No desktop as secoes .etapa sao de DUAS colunas, entao o texto
+   alinhado a esquerda casa com a coluna da imagem ao lado. No
+   celular tudo vira coluna unica e essa mistura (8 secoes a
+   esquerda, 7 centralizadas) fica sem logica. Aqui o eixo passa a
+   ser UM so: tudo centralizado, respiro menor e titulos que cabem
+   na tela sem quebrar palavra.
+   ========================================================= */
+@media(max-width:760px){
+
+  /* --- um eixo so: tudo centralizado --- */
+  .head,.head.center{text-align:center;margin-inline:auto}
+  .etapa,.etapa.rev{text-align:center}
+  .etapa .et-label{margin-inline:auto}
+  .virada,.gar,.auto-grid > div:last-child{text-align:center}
+  .strip .container{text-align:center}
+
+  /* LISTAS: o titulo centraliza, mas o ITEM continua alinhado a
+     esquerda e com o marcador ao lado. Testei com o marcador em
+     cima do texto (centralizado de verdade) e ficou pior: o
+     travessao virava separador, cada item parecia um bloco solto e
+     a lista deixava de ser lida como conjunto. Entao o bloco da
+     lista e que e centralizado na coluna — o texto dentro dele
+     segue a esquerda, que e como se le lista. */
+  .et-list,.auto-cred,.pq ul,.mod-bloco ul,.inc ul{
+    display:inline-grid;text-align:left;justify-items:start;gap:11px
+  }
+  .et-list li,.auto-cred li,.pq li,.mod-bloco li,.inc li{text-align:left}
+  /* o check dos itens longos sobe um pouco: em 2 linhas ele
+     centralizava errado em relacao a primeira linha */
+  .et-list li::before,.auto-cred li::before{top:1px}
+
+  /* cabecalho dos blocos de modulo/radar tambem centraliza */
+  .mod-bloco .mb-top,.radar-top,.inc-top{justify-content:center}
+  .mod-bloco,.pq,.dor{text-align:center}
+  .dor{border-left:none;border-top:3px solid #C2453C}
+  .bancas{justify-content:center}
+
+  /* --- respiro: 72px entre secoes vira excesso em tela pequena --- */
+  section.blk{padding:56px 0}
+  section.blk.tight{padding:44px 0}
+  .head{margin-bottom:34px}
+  .hero{padding:44px 0 52px}
+  .final{padding:64px 0 72px}
+  .etapa,.auto-grid,.hero-grid{gap:32px}
+
+  /* --- titulos: caber sem quebrar palavra no meio --- */
+  .head h2,.etapa h2{font-size:clamp(1.55rem,6.4vw,2rem)}
+  .hero h1{font-size:clamp(1.95rem,7.6vw,2.4rem)}
+  .final h2{font-size:clamp(1.7rem,6.8vw,2.2rem)}
+  .virada h2{font-size:clamp(1.45rem,5.8vw,1.9rem)}
+  h1,h2,h3,h4{text-wrap:balance;hyphens:none}
+  .head p,.etapa .desc{font-size:1rem}
+
+  /* --- faixa de numeros: 4 numeros em 2x2, nao empilhados --- */
+  .strip .container{display:grid;grid-template-columns:1fr 1fr;gap:22px 14px;padding:28px 0}
+  .strip .l{max-width:none;padding:0 4px}
+
+  /* --- foto do Felipe: retrato inteiro ocupa meia tela de rolagem --- */
+  .auto-foto{max-width:260px}
+  .auto-foto img{aspect-ratio:1/1;object-position:center 22%}
+
+  /* --- cartoes: menos peso, mesma informacao --- */
+  .trilha-card,.radar-mock,.aprov,.mock{padding:22px 18px}
+  .valor-card{padding:26px 20px}
+  .tc-step{padding:13px 0}
+  .radar-item{grid-template-columns:1fr;justify-items:center;gap:8px;text-align:center}
+
+  /* cta-note: era flex, entao o "v" virava um item e caia numa
+     linha so dele. Volta a ser texto corrido com o check inline. */
+  .cta-note{display:block;text-align:center;line-height:1.5}
+  .cta-note::before{display:inline;margin-right:6px}
+
+  /* TABELA DE SALARIOS: tinha min-width 420px e rolava na
+     horizontal, cortando o valor ("R$ 35.1..."). O numero E o
+     argumento da secao — nao pode ficar escondido. Vira lista:
+     cargo em cima, valor embaixo, tudo visivel sem rolar. */
+  .sal-scroll{overflow:visible}
+  table.sal{min-width:0;display:block}
+  table.sal tbody{display:block}
+  table.sal tr{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:13px 18px;border-top:1px solid rgba(255,255,255,.05)}
+  table.sal tr:first-child{border-top:none}
+  table.sal td{display:block;border:none;padding:0;font-size:.92rem}
+  table.sal td:first-child{flex:1 1 auto;text-align:left}
+  table.sal td:last-child{flex:0 0 auto;text-align:right;font-size:.98rem}
+  .sal-head{padding:18px}
+  .sal-foot{padding:14px 18px}
+
+  /* --- FAQ: o toque abre melhor em area maior --- */
+  .fq summary{padding:18px 20px;font-size:.97rem}
+  .fq .a{padding:0 20px 20px}
+}
+
+/* telas bem estreitas (iPhone SE e afins) */
+@media(max-width:380px){
+  .strip .container{grid-template-columns:1fr}
+  .preco-por .num{font-size:3rem}
+}
 </style>
 </head>
 <body>
