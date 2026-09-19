@@ -496,6 +496,14 @@ footer{background:var(--preto-2);border-top:1px solid var(--linha);padding:56px 
 
   /* --- um eixo so: tudo centralizado --- */
   .head,.head.center{text-align:center;margin-inline:auto}
+  /* o hero tinha ficado de fora da centralizacao geral */
+  .hero-grid > div:first-child{text-align:center}
+  .hero .lead{margin-inline:auto}
+  /* eyebrow: e inline-flex com a bolinha via ::before. Centralizar o
+     bloco fazia a bolinha ficar sozinha na margem quando o texto
+     quebrava em 2 linhas. Vira texto corrido com a bolinha inline. */
+  .eyebrow{display:inline;text-align:center}
+  .eyebrow::before{display:inline-block;vertical-align:middle;margin-right:8px;position:relative;top:-1px}
   .etapa,.etapa.rev{text-align:center}
   .etapa .et-label{margin-inline:auto}
   .virada,.gar,.auto-grid > div:last-child{text-align:center}
@@ -538,9 +546,16 @@ footer{background:var(--preto-2);border-top:1px solid var(--linha);padding:56px 
   h1,h2,h3,h4{text-wrap:balance;hyphens:none}
   .head p,.etapa .desc{font-size:1rem}
 
-  /* --- faixa de numeros: 4 numeros em 2x2, nao empilhados --- */
-  .strip .container{display:grid;grid-template-columns:1fr 1fr;gap:22px 14px;padding:28px 0}
-  .strip .l{max-width:none;padding:0 4px}
+  /* FAIXA DE NUMEROS: em 2x2 centralizado sobrava ar e ela comia
+     225px de rolagem. Vira LISTA: numero a esquerda (largura fixa,
+     entao os 4 alinham na mesma coluna) e rotulo a direita, numa
+     linha so cada. Le-se de cima a baixo e ocupa ~metade da altura. */
+  .strip .container{display:grid;grid-template-columns:1fr;gap:0;padding:4px 0;text-align:left}
+  .strip .container > div{display:grid;grid-template-columns:52px 1fr;align-items:center;gap:12px;
+    padding:10px 2px;border-top:1px solid rgba(255,255,255,.06)}
+  .strip .container > div:first-child{border-top:none}
+  .strip .n{font-size:1.5rem;text-align:right}
+  .strip .l{max-width:none;margin-top:0;font-size:.84rem;line-height:1.3}
 
   /* --- foto do Felipe: retrato inteiro ocupa meia tela de rolagem --- */
   .auto-foto{max-width:260px}
@@ -663,7 +678,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container">
     <div><div class="n mono">22</div><div class="l">módulos do zero ao avançado</div></div>
     <div><div class="n mono">4</div><div class="l">bancas analisadas em detalhe</div></div>
-    <div><div class="n mono">7</div><div class="l">dias é o intervalo de atualização do radar</div></div>
+    <div><div class="n mono">7</div><div class="l">dias é o intervalo do radar</div></div>
     <div><div class="n mono">2h</div><div class="l">por dia é o que a preparação exige</div></div>
   </div>
 </div>
@@ -1348,7 +1363,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         var m = full.match(/([\d.]+)/);
         if(!m) return;
         var target = parseFloat(m[1].replace(/\./g,''));
-        if(isNaN(target) || target < 3) return;
+        // So vale a pena animar numero GRANDE. Nesta pagina a faixa tem
+        // 22, 4 e 7: contar de 0 ate 4 exibe "0,1,2,3" por 1,1s, ou seja,
+        // o visitante le um numero FALSO antes do certo. Piso alto = a
+        // faixa entra ja com o valor real.
+        if(isNaN(target) || target < 100) return;
         var dur = 1100, t0 = null;
         function step(ts){
           if(!t0) t0 = ts;
