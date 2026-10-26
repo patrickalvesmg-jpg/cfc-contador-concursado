@@ -1384,5 +1384,72 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   io.observe(strip);
 })();
 </script>
+
+<script>
+// ===== lead que chegou de fato no WhatsApp (Kommo → API de Conversões) =====
+// No clique, gera um código e põe no fim da mensagem pronta: "... (cód. A7K2X)".
+// Os dados da visita (_fbc, _fbp) vão pro Supabase; quando a mensagem chega no Kommo,
+// o código liga a conversa a esta visita e o evento LeadWhatsApp vai pra Meta.
+// Não mexe no GTM: o whatsapp_click continua igual. Fonte: Projetos/vertice/sistemas/capi-kommo.
+(function () {
+  var CLIENTE = 'cfc-academy';
+  var ENDPOINT = 'https://azojrfznixrsvwiwdhbz.supabase.co/functions/v1/capi-clique';
+  var TEXTO_PADRAO = 'Olá! Vim da página e quero ser Contador Concursado. Pode me passar a minha condição?';
+  var LETRAS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  var MARCA = /\s*\(c[óo]d\. [A-Z0-9]{5}\)$/;
+
+  function cookie(nome) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + nome + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  function fbc() {
+    var atual = cookie('_fbc');
+    if (atual) return atual;
+    var fbclid = new URLSearchParams(location.search).get('fbclid');
+    if (!fbclid) return null;
+    var valor = 'fb.1.' + Date.now() + '.' + fbclid;
+    document.cookie = '_fbc=' + valor + '; path=/; max-age=' + 90 * 86400 + '; SameSite=Lax';
+    return valor;
+  }
+  fbc();
+
+  function ehWhatsapp(url) {
+    return /^(https?:\/\/(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com)\/|whatsapp:)/i.test(url || '');
+  }
+
+  function comCodigo(url) {
+    var sorteio = new Uint32Array(5);
+    crypto.getRandomValues(sorteio);
+    var codigo = '';
+    for (var i = 0; i < 5; i++) codigo += LETRAS[sorteio[i] % LETRAS.length];
+
+    var destino = new URL(url, location.href);
+    var texto = (destino.searchParams.get('text') || TEXTO_PADRAO).replace(MARCA, '');
+    var partes = [];
+    destino.searchParams.forEach(function (v, k) {
+      if (k !== 'text') partes.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+    });
+    partes.push('text=' + encodeURIComponent(texto + ' (cód. ' + codigo + ')'));
+    destino.search = '?' + partes.join('&');
+
+    try {
+      navigator.sendBeacon(ENDPOINT, JSON.stringify({
+        cliente: CLIENTE,
+        codigo: codigo,
+        fbc: fbc(),
+        fbp: cookie('_fbp'),
+        url: location.href.split('#')[0]
+      }));
+    } catch (e) {}
+    return destino.toString();
+  }
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('a[href]');
+    if (link && ehWhatsapp(link.href)) link.href = comCodigo(link.href);
+  }, true);
+})();
+</script>
 </body>
 </html>
